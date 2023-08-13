@@ -1,0 +1,21 @@
+{
+  "entries" : [ {
+    "id" : "1",
+    "name" : "default",
+    "regex" : ".ts",
+    "adapter" : "devtools",
+    "matchType" : "contains",
+    "xpathClick" : null,
+    "elementById" : null,
+    "stream" : true
+  }, {
+    "id" : "2",
+    "name" : "r--test",
+    "regex" : "tyu",
+    "adapter" : "devtools",
+    "matchType" : "find",
+    "xpathClick" : "/html/body/div[10]/div/div[3]/div[1]/div[1]/div[1]/div[1]",
+    "elementById" : null,
+    "stream" : true
+  } ]
+}
