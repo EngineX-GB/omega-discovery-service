@@ -10,6 +10,8 @@ import lombok.Setter;
 public class DiscoveryConfig {
 
 	private String chromeDriverPath;
+
+	private String chromeExecutablePath;
 	
 	private MapperEntry mappingEntry;
 	

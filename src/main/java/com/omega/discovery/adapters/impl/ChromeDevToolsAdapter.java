@@ -1,5 +1,6 @@
 package com.omega.discovery.adapters.impl;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -30,7 +31,8 @@ public class ChromeDevToolsAdapter implements NetworkMediaAdapter{
 		final Result result = new Result();
 		System.setProperty("webdriver.chrome.driver", config.getChromeDriverPath());
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless");
+		//options.addArguments("--headless");
+		options.setBinary(new File(config.getChromeExecutablePath()));
 		ChromeDriver chromeDriver = new ChromeDriver(options);
 		
 		DevTools chromeDevTools = chromeDriver.getDevTools();
