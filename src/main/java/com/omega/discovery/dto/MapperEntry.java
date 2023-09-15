@@ -3,6 +3,8 @@ package com.omega.discovery.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class MapperEntry {
@@ -16,10 +18,8 @@ public class MapperEntry {
 	private String adapter;
 	
 	private String matchType;
-	
-	private String xpathClick;
-	
-	private String elementById;
+
+	private List<Step> steps;
 	
 	private boolean stream;
 }

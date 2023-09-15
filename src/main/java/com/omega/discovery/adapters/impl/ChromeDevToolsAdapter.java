@@ -1,13 +1,17 @@
 package com.omega.discovery.adapters.impl;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
-import com.omega.discovery.dto.AdapterResponse;
-import com.omega.discovery.dto.Result;
+import com.omega.discovery.dto.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -21,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.omega.discovery.adapters.NetworkMediaAdapter;
-import com.omega.discovery.dto.DiscoveryConfig;
 
 @Component
 public class ChromeDevToolsAdapter implements NetworkMediaAdapter{
@@ -36,55 +39,46 @@ public class ChromeDevToolsAdapter implements NetworkMediaAdapter{
 		final Result result = new Result();
 		System.setProperty("webdriver.chrome.driver", config.getChromeDriverPath());
 		ChromeOptions options = new ChromeOptions();
-		//options.addArguments("--headless"); //TODO: undo this
-		//options.setBinary(new File(config.getChromeExecutablePath()));
+		options.addArguments("--mute-audio");
+		if (!config.getChromeDriverDebugMode()) {
+			options.addArguments("--headless");
+		}
+		if (config.getChromeExecutablePath() != null && Files.exists(Paths.get(config.getChromeExecutablePath()))) {
+			options.setBinary(new File(config.getChromeExecutablePath()));
+		}
 		ChromeDriver chromeDriver = new ChromeDriver(options);
-		
 		DevTools chromeDevTools = chromeDriver.getDevTools();
 		chromeDevTools.createSession();
-
-
 		chromeDevTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
-
-        //set blocked URL patterns
-//        chromeDevTools.send(Network.setBlockedURLs(ImmutableList.of("*.css", "*.png")));
-
-        //add event listener to verify that css and png are blocked
-//        chromeDevTools.addListener(Network.requestWillBeSent(), responseReceived -> {
-//			if (responseReceived.getRequest().getUrl().contains("\\.ts")) {
-//				System.out.println("OUT>> TS FILE");
-//			}
-//        	if (config.getMappingEntry().getMatchType().equals("contains")) {
-//        		if (responseReceived.getRequest().getUrl().contains(config.getMappingEntry().getRegex())) {
-//        			detectedLinks.add(responseReceived.getRequest().getUrl());
-//            	}
-//        	}
-//        });
-
-
-
 		chromeDriver.get(url);
 		chromeDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(chromeDriver, 40);
-//		if (config.getMappingEntry().getXpathClick() != null) {
-//			chromeDriver.findElementByXPath(config.getMappingEntry().getXpathClick()).click();
-//		}
-//		if (config.getMappingEntry().getElementById() != null) {
-//			chromeDriver.findElementById(config.getMappingEntry().getElementById()).click();
-//		}
 
-		wait.until(ExpectedConditions.visibilityOf(chromeDriver.findElementByXPath("/html/body/div[4]/div/div/button")));
-		if (chromeDriver.findElementByXPath("/html/body/div[4]/div/div/button") != null) {
-			chromeDriver.findElementByXPath("/html/body/div[4]/div/div/button").click();
-		}
+		final List<Step> steps = config.getMappingEntry().getSteps().stream().sorted().collect(Collectors.toList());
 
-		wait.until(ExpectedConditions.visibilityOf(chromeDriver.findElementByXPath("/html/body/div[4]/div/button[1]")));
-		if (chromeDriver.findElementByXPath("/html/body/div[4]/div/button[1]") != null) {
-			chromeDriver.findElementByXPath("/html/body/div[4]/div/button[1]").click();
-		}
-
-		if (chromeDriver.findElementById("player") != null) {
-			chromeDriver.findElementById("player").click();
+		for (final Step step : steps) {
+			if (step.getElementType() == ElementType.XPATH) {
+				wait.until(ExpectedConditions.visibilityOf(chromeDriver.findElementByXPath(step.getValue())));
+				if (chromeDriver.findElementByXPath(step.getValue()) != null) {
+					LOGGER.info("[Step] : Element {} click on {}", step.getElementType(), step.getValue());
+					chromeDriver.findElementByXPath(step.getValue()).click();
+				}
+			} else if (step.getElementType() == ElementType.ID) {
+				wait.until(ExpectedConditions.visibilityOf(chromeDriver.findElementById(step.getValue())));
+				if (chromeDriver.findElementById(step.getValue()) != null) {
+					LOGGER.info("[Step] : Element {} click on {}", step.getElementType(), step.getValue());
+					chromeDriver.findElementById(step.getValue()).click();
+				}
+			} else if (step.getElementType() == ElementType.PAUSE) {
+				try {
+					LOGGER.info("[Step] : Sleeping for {} ms", step.getValue());
+					Thread.sleep(Long.valueOf(step.getValue()));
+				} catch(InterruptedException e) {
+					e.printStackTrace();
+				}
+			} else {
+				LOGGER.info("Unknown element type : {}", step.getElementType());
+			}
 		}
 
 		chromeDevTools.addListener(Network.requestWillBeSent(), responseReceived -> {

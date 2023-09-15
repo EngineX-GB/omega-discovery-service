@@ -14,5 +14,7 @@ public class DiscoveryConfig {
 	private String chromeExecutablePath;
 	
 	private MapperEntry mappingEntry;
+
+	private Boolean chromeDriverDebugMode;
 	
 }

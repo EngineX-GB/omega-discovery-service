@@ -5,17 +5,51 @@
     "regex" : ".ts",
     "adapter" : "devtools",
     "matchType" : "contains",
-    "xpathClick" : null,
-    "elementById" : "player",
+    "steps" : [
+      {"stepNumber" :  1,
+      "elementType" :  "XPATH",
+      "value" : "/html/body/div[4]/div/div/button"
+      },
+      {"stepNumber" :  2,
+        "elementType" :  "XPATH",
+        "value" : "/html/body/div[4]/div/button[1]"
+      },
+      {"stepNumber" :  3,
+        "elementType" :  "ID",
+        "value" : "player"
+      },
+      {"stepNumber" :  4,
+        "elementType" :  "PAUSE",
+        "value" : "17000"
+      }
+    ],
     "stream" : true
-  }, {
-    "id" : "2",
-    "name" : "r--test",
-    "regex" : "tyu",
-    "adapter" : "devtools",
-    "matchType" : "find",
-    "xpathClick" : "/html/body/div[10]/div/div[3]/div[1]/div[1]/div[1]/div[1]",
-    "elementById" : null,
-    "stream" : true
-  } ]
+  },
+    {
+      "id" : "2",
+      "name" : "chrome-testing",
+      "regex" : "720P_4000K_",
+      "adapter" : "devtools",
+      "matchType" : "contains",
+      "steps" : [
+        {"stepNumber" :  1,
+          "elementType" :  "XPATH",
+          "value" : "/html/body/div[4]/div/div/button"
+        },
+        {"stepNumber" :  2,
+          "elementType" :  "XPATH",
+          "value" : "/html/body/div[4]/div/button[1]"
+        },
+        {"stepNumber" :  3,
+          "elementType" :  "ID",
+          "value" : "player"
+        },
+        {"stepNumber" :  4,
+          "elementType" :  "PAUSE",
+          "value" : "17000"
+        }
+      ],
+      "stream" : false
+    }
+  ]
 }

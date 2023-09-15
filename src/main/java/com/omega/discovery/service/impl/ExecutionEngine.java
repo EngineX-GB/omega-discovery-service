@@ -34,6 +34,9 @@ public class ExecutionEngine {
 	@Value("${chrome.executable.path}")
 	private String chromeExecutablePath;
 
+	@Value("${chromedriver.debug.mode}")
+	private Boolean chromeDriverDebugMode;
+
 	
 	@PostConstruct
 	public void init() {
@@ -42,13 +45,13 @@ public class ExecutionEngine {
 	
 	public void execute(final DiscoveryRequest request) {
 		final MapperEntry selectedMapperEntry = getSelectedMapperEntry(mappingService.getMapper(), request.getAdapterName());
-		executorService.submit(new DiscoveryExecutableTask(request, new DiscoveryConfig(chromeDriverPath, chromeExecutablePath, selectedMapperEntry)));
+		executorService.submit(new DiscoveryExecutableTask(request, new DiscoveryConfig(chromeDriverPath, chromeExecutablePath, selectedMapperEntry, chromeDriverDebugMode)));
 	}
 	
 	public String executeDiscoveryAndRetrieveLink(final DiscoveryRequest request) {
 		final MapperEntry selectedMapperEntry = getSelectedMapperEntry(mappingService.getMapper(), request.getAdapterName());
 		return new DiscoveryExecutableTask(request, 
-				new DiscoveryConfig(chromeDriverPath, chromeExecutablePath, selectedMapperEntry)).retrieveLink();
+				new DiscoveryConfig(chromeDriverPath, chromeExecutablePath, selectedMapperEntry, chromeDriverDebugMode)).retrieveLink();
 	}
 	
 	@PreDestroy
