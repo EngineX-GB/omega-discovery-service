@@ -5,17 +5,75 @@
     "regex" : ".ts",
     "adapter" : "devtools",
     "matchType" : "contains",
-    "xpathClick" : null,
-    "elementById" : null,
+    "steps" : [
+      {"stepNumber" :  1,
+        "elementType" :  "XPATH",
+        "value" : "/html/body/div[4]/div/div/button"
+      },
+      {"stepNumber" :  2,
+        "elementType" :  "XPATH",
+        "value" : "/html/body/div[4]/div/button[1]"
+      },
+      {"stepNumber" :  3,
+        "elementType" :  "ID",
+        "value" : "player"
+      },
+      {"stepNumber" :  4,
+        "elementType" :  "PAUSE",
+        "value" : "17000"
+      }
+    ],
     "stream" : true
-  }, {
-    "id" : "2",
-    "name" : "r--test",
-    "regex" : "tyu",
-    "adapter" : "devtools",
-    "matchType" : "find",
-    "xpathClick" : "/html/body/div[10]/div/div[3]/div[1]/div[1]/div[1]/div[1]",
-    "elementById" : null,
-    "stream" : true
-  } ]
+  },
+    {
+      "id" : "2",
+      "name" : "chrome-testing",
+      "regex" : "validfrom",
+      "adapter" : "devtools",
+      "matchType" : "contains",
+      "steps" : [
+        {"stepNumber" :  1,
+          "elementType" :  "XPATH",
+          "value" : "/html/body/div[4]/div/div/button"
+        },
+        {"stepNumber" :  2,
+          "elementType" :  "XPATH",
+          "value" : "/html/body/div[4]/div/button[1]"
+        },
+        {"stepNumber" :  3,
+          "elementType" :  "ID",
+          "value" : "player"
+        },
+        {"stepNumber" :  4,
+          "elementType" :  "PAUSE",
+          "value" : "5000"
+        },
+        {"stepNumber" :  5,
+          "elementType" :  "REFRESH",
+          "value" : null
+        },
+        {"stepNumber" :  6,
+          "elementType" :  "PAUSE",
+          "value" : "6000"
+        },
+        {"stepNumber" :  7,
+          "elementType" :  "REFRESH",
+          "value" : null
+        },
+        {"stepNumber" :  8,
+          "elementType" :  "PAUSE",
+          "value" : "6000"
+        },
+        {"stepNumber" :  9,
+          "elementType" :  "REFRESH",
+          "value" : null
+        },
+        {"stepNumber" :  10,
+          "elementType" :  "PAUSE",
+          "value" : "6000"
+        }
+      ],
+      "stream" : false
+    }
+  ]
 }
