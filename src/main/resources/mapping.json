@@ -28,7 +28,7 @@
     {
       "id" : "2",
       "name" : "chrome-testing",
-      "regex" : "720P_4000K_",
+      "regex" : "validfrom",
       "adapter" : "devtools",
       "matchType" : "contains",
       "steps" : [
@@ -46,7 +46,31 @@
         },
         {"stepNumber" :  4,
           "elementType" :  "PAUSE",
-          "value" : "17000"
+          "value" : "5000"
+        },
+        {"stepNumber" :  5,
+          "elementType" :  "REFRESH",
+          "value" : null
+        },
+        {"stepNumber" :  6,
+          "elementType" :  "PAUSE",
+          "value" : "6000"
+        },
+        {"stepNumber" :  7,
+          "elementType" :  "REFRESH",
+          "value" : null
+        },
+        {"stepNumber" :  8,
+          "elementType" :  "PAUSE",
+          "value" : "6000"
+        },
+        {"stepNumber" :  9,
+          "elementType" :  "REFRESH",
+          "value" : null
+        },
+        {"stepNumber" :  10,
+          "elementType" :  "PAUSE",
+          "value" : "6000"
         }
       ],
       "stream" : false

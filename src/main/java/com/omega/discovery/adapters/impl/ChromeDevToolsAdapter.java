@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.omega.discovery.dto.*;
@@ -54,6 +56,22 @@ public class ChromeDevToolsAdapter implements NetworkMediaAdapter{
 		chromeDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(chromeDriver, 40);
 
+		chromeDevTools.addListener(Network.requestWillBeSent(), responseReceived -> {
+			if (config.getMappingEntry().getMatchType().equals("contains")) {
+				if (responseReceived.getRequest().getUrl().contains(config.getMappingEntry().getRegex())) {
+					detectedLinks.add(responseReceived.getRequest().getUrl());
+				}
+			}
+			if (config.getMappingEntry().getMatchType().equals("pattern")) {
+				final Pattern pattern = Pattern.compile(config.getMappingEntry().getRegex());
+				final Matcher matcher = pattern.matcher(responseReceived.getRequest().getUrl());
+				System.out.println("OUT>>>> ANALYSE LINK : " + pattern.pattern() + ", url = " + responseReceived.getRequest().getUrl());
+				if (matcher.find()) {
+					detectedLinks.add(responseReceived.getRequest().getUrl());
+				}
+			}
+		});
+
 		final List<Step> steps = config.getMappingEntry().getSteps().stream().sorted().collect(Collectors.toList());
 
 		for (final Step step : steps) {
@@ -76,25 +94,20 @@ public class ChromeDevToolsAdapter implements NetworkMediaAdapter{
 				} catch(InterruptedException e) {
 					e.printStackTrace();
 				}
-			} else {
+			} else if (step.getElementType() == ElementType.REFRESH) {
+				LOGGER.info("[Step] : refresh");
+				chromeDriver.navigate().refresh();
+			}
+			else {
 				LOGGER.info("Unknown element type : {}", step.getElementType());
 			}
 		}
 
-		chromeDevTools.addListener(Network.requestWillBeSent(), responseReceived -> {
-			if (responseReceived.getRequest().getUrl().contains("\\.ts")) {
-				System.out.println("OUT>> TS FILE");
-			}
-			if (config.getMappingEntry().getMatchType().equals("contains")) {
-				if (responseReceived.getRequest().getUrl().contains(config.getMappingEntry().getRegex())) {
-					detectedLinks.add(responseReceived.getRequest().getUrl());
-				}
-			}
-		});
+
 		try {
 			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
+		} catch(InterruptedException e) {
+			e.printStackTrace();
 		}
 		chromeDevTools.close();
 		chromeDriver.quit();
