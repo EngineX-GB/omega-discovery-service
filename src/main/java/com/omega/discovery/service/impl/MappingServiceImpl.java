@@ -59,7 +59,13 @@ public class MappingServiceImpl implements MappingService{
 
 	@Override
 	public MapperEntry addMapperEntry(final MapperEntry mappingEntry) throws DiscoveryServiceException {
-		mappingEntry.setId(UUID.randomUUID().toString());
+		if (mappingEntry.getId() == null) {
+			mappingEntry.setId(UUID.randomUUID().toString());
+		}
+		long duplicateId = this.getMapperEntries().values().stream().filter(s -> s.getId().equals(mappingEntry.getId())).count();
+		if (duplicateId > 0) {
+			throw new DiscoveryServiceException("Duplicate mapping id found : " + mappingEntry.getId());
+		}
 		boolean addMapperEntry = this.mapper.getEntries().add(mappingEntry);
 		try {
 			objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(mappingFilePath), this.mapper);
