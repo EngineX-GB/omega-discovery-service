@@ -6,6 +6,7 @@ import com.omega.discovery.dto.MapperEntry;
 import com.omega.discovery.exceptions.DiscoveryServiceException;
 import com.omega.discovery.service.impl.MappingServiceImpl;
 import com.omega.discovery.util.ReflectionUtil;
+import com.omega.discovery.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +42,7 @@ public class MappingServiceTest {
 
     @Test
     public void testAddAndDeleteMappingEntry() throws Exception{
-        final MapperEntry mapperEntry = createMapperEntry();
+        final MapperEntry mapperEntry = TestUtil.createMapperEntry();
         final MapperEntry updatedMapperEntry = mappingService.addMapperEntry(mapperEntry);
         assertNotNull(updatedMapperEntry);
         assertEquals(3, mappingService.getMapperEntries().size());
@@ -65,16 +66,6 @@ public class MappingServiceTest {
     public void testGetMappersByName() {
         assertFalse(mappingService.getMapperEntryByName("default").isEmpty());
         assertTrue(mappingService.getMapperEntryByName("x").isEmpty());
-    }
-
-    public MapperEntry createMapperEntry() {
-        final MapperEntry mapperEntry = new MapperEntry();
-        mapperEntry.setId("10");
-        mapperEntry.setName("mapper-test");
-        mapperEntry.setRegex(".ts");
-        mapperEntry.setStream(true);
-        mapperEntry.setAdapter("default");
-        return mapperEntry;
     }
 
 }
