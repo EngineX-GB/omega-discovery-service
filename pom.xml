@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.omega</groupId>
 	<artifactId>omega-discovery-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>omega-discovery-service</name>
 	<description>A Discovery Service</description>
 
@@ -167,6 +167,18 @@
 		</dependency>
 	</dependencies>
 
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/version.txt</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+
 	<profiles>
 		<profile>
 			<id>dev</id>
@@ -215,9 +227,11 @@
 										<unzip src="${project.basedir}/build/assemble/chrome-devtools.zip" dest="${project.basedir}/build/assemble/tools" />
 										<delete file="${project.basedir}/build/assemble/chrome-devtools.zip" />
 										<copy file="scripts/omega-discovery-prod.bat" tofile="${project.basedir}/build/assemble/omega-discovery-prod.bat" />
+										<replace file="${project.basedir}/build/assemble/omega-discovery-prod.bat"
+												 token="@project.version" value="${project.version}"/>
 										<mkdir dir="${project.basedir}/build/assemble/config" />
-										<copy file="target/omega-discovery-service-0.0.1-SNAPSHOT.jar"
-											  tofile="${project.basedir}/build/assemble/omega-discovery-service-0.0.1-SNAPSHOT.jar" />
+										<copy file="target/omega-discovery-service-${project.version}.jar"
+											  tofile="${project.basedir}/build/assemble/omega-discovery-service-${project.version}.jar" />
 										<copy file="scripts/application.properties"
 											  tofile="${project.basedir}/build/assemble/config/application.properties" />
 										<copy file="scripts/mapper.json"
@@ -238,55 +252,6 @@
 
 		</profile>
 	</profiles>
-
-
-
-<!--	-->
-<!--	<build>-->
-<!--		<plugins>-->
-<!--			<plugin>-->
-<!--				<groupId>org.springframework.boot</groupId>-->
-<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--			</plugin>-->
-<!--			<plugin>-->
-<!--				<groupId>org.apache.maven.plugins</groupId>-->
-<!--				<artifactId>maven-antrun-plugin</artifactId>-->
-<!--				<version>1.1</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<phase>package</phase>-->
-<!--						<goals>-->
-<!--							<goal>run</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<tasks>-->
-<!--								<delete dir="${project.basedir}/release" />-->
-<!--								<delete dir="${project.basedir}/build" />-->
-<!--								<mkdir dir="${project.basedir}/release" />-->
-<!--								<mkdir dir="${project.basedir}/build/assemble" />-->
-<!--								<mkdir dir="${project.basedir}/build/final" />-->
-<!--								<mkdir dir="${project.basedir}/build/assemble/logs" />-->
-<!--								<copy file="scripts/omega-discovery-prod.bat" tofile="${project.basedir}/build/assemble/omega-discovery-prod.bat" />-->
-<!--								<mkdir dir="${project.basedir}/build/assemble/config" />-->
-<!--								<copy file="target/omega-discovery-service-0.0.1-SNAPSHOT.jar"-->
-<!--									  tofile="${project.basedir}/build/assemble/omega-discovery-service-0.0.1-SNAPSHOT.jar" />-->
-<!--								<copy file="scripts/application.properties"-->
-<!--									  tofile="${project.basedir}/build/assemble/config/application.properties" />-->
-<!--								<copy file="scripts/mapper.json"-->
-<!--									  tofile="${project.basedir}/build/assemble/config/mapper.json" />-->
-<!--								<zip destFile="${project.basedir}/build/final/omega-discovery-service.zip" baseDir="${project.basedir}/build/assemble" />-->
-<!--								<copy file="scripts/installer.ps1" tofile="${project.basedir}/build/final/installer.ps1" />-->
-<!--								<copy file="scripts/installer.bat" tofile="${project.basedir}/build/final/installer.bat" />-->
-<!--								<zip destFile="${project.basedir}/release/omega-discovery-service.zip" baseDir="${project.basedir}/build/final" />-->
-<!--							</tasks>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
-
-<!--		</plugins>-->
-<!--	</build>-->
-
 
 
 
